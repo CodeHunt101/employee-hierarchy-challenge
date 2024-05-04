@@ -1,7 +1,6 @@
 import bodyParser from 'body-parser'
-import express from 'express'
+import { app } from './api/v1/employees/route'
 
-const app = express()
 app.use(bodyParser.json())
 
 const runServer = () => {
