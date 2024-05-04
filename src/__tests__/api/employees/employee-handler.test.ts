@@ -9,6 +9,26 @@ describe('EmployeeHandler class', () => {
       const idGenerator = new IdGenerator(10)
       employeeHandler = new EmployeeHandler(idGenerator)
     })
+    it('returns correct existing employee IDs', () => {
+      employeeHandler.addEmployee('Bobby')
+      employeeHandler.addEmployee('Darren')
+      const existingIds = employeeHandler.getExistingEmployeeIds()
+      expect(existingIds.size).toBe(2)
+    })
+
+    it('returns existing employee IDs including added IDs', () => {
+      employeeHandler.addEmployee('Bobby')
+      employeeHandler.addEmployee('Darren')
+      const existingIds = employeeHandler.getExistingEmployeeIds()
+      expect(Array.from(existingIds)).toEqual(expect.arrayContaining([1, 2]))
+    })
+  })
+
+  describe('existing employees', () => {
+    beforeEach(() => {
+      const idGenerator = new IdGenerator(10)
+      employeeHandler = new EmployeeHandler(idGenerator)
+    })
     describe('adding employees', () => {
       beforeEach(() => {
         const idGenerator = new IdGenerator(10)

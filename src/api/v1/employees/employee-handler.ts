@@ -10,6 +10,11 @@ export class EmployeeHandler {
     this.employees = []
     this.idGenerator = idGenerator
   }
+
+  getExistingEmployeeIds() {
+    return this.existingIds
+  }
+  
   addEmployee(name: string, managerId: number | null = null): Employee {
     if (!name) {
       throw new Error('Employee name is required.')
