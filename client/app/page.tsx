@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import Table from './components/table'
 import { EmployeesHierarchyData } from '../../src/types/employee/employee.type'
+import Spinner from './components/spinner'
 
 const OrganisationChart = () => {
   const [hierarchy, setHierarchy] = useState<EmployeesHierarchyData>({
@@ -29,15 +30,11 @@ const OrganisationChart = () => {
     fetchEmployees()
   }, [])
 
-  if (loading) {
-    return <h1>Loading Table</h1>
-  }
-
   if (error) {
     return <h1>{error}</h1>
   }
 
-  if (hierarchy.employeesHierarchy.length === 0) {
+  if (hierarchy.employeesHierarchy.length === 0 && !loading) {
     return <h1>No employees found</h1>
   }
 
@@ -45,6 +42,7 @@ const OrganisationChart = () => {
     <main className="flex justify-center">
       <div className="prose m-10">
         <h1>Organisation hierarchy</h1>
+        {loading && <Spinner/>}
         <Table hierarchy={hierarchy} />
       </div>
     </main>

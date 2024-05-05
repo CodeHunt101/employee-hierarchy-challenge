@@ -28,7 +28,7 @@ describe('OrganisationChart component', () => {
     act(() => {
       render(<OrganisationChart />)
     })
-    expect(screen.getByRole('heading')).toHaveTextContent('Loading Table')
+    expect(screen.getByRole('span')).toBeInTheDocument()
   })
   it('displays error message when failed to fetch employee data', async () => {
     const errorMessage = 'Failed to load data'

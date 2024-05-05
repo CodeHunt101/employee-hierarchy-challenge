@@ -16,7 +16,7 @@ const Table = ({ hierarchy }: { hierarchy: EmployeesHierarchyData }) => {
     }
 
     // Add employee name
-    rowData.push(<td key={depth}>{name}</td>)
+    rowData.push(<td key={depth}><b>{name}</b></td>)
 
     // Add empty cells for hierarchy levels below
     for (let cellIndex = depth + 1; cellIndex <= maxDepth; cellIndex++) {
