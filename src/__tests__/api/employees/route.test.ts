@@ -38,8 +38,6 @@ describe('GET /hierarchy/', () => {
       return null
     })
     const response = await request.get(`/api/v1/hierarchy`)
-    console.log(response.body)
-
     expect(response.status).toEqual(404)
     expect(response.body.error).toEqual('No data found')
   })
