@@ -127,7 +127,7 @@ OrganisationChart.tsx
   |-->Spinner.tsx
 ```
 
-- The <OrganisationChart/> component can access the _Express API routes_ and pass props that contain the hirarchical employee information to the <Table/>.
+- The `<OrganisationChart/>` component can access the _Express API routes_ and pass props that contain the hirarchical employee information to the `<Table/>`.
 
 ---
 
