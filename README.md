@@ -8,7 +8,7 @@
 - [Context](#context)
 - [Instructions](#instructions)
   - [How to install and run](#How-to-install-and-run-the-server-and-the-client)
-  - [Jest tests instructions](#react-tests-instructions)
+  - [Jest tests instructions](#jest-tests-instructions)
 - [Architecture](#architecture-mvc)
   - [Backend](#backend)
   - [Frontend](#frontend)
@@ -63,7 +63,7 @@ Although this application only renders a table in the client, It is fully respon
 
 1. Clone this repository.
 
-2. First, install all dependencies for the development server. From the root directory, run:
+2. Install all dependencies for the development server. From the root directory, run:
 
 ```
 npm install
@@ -76,14 +76,19 @@ npm run dev
 ```
 It will run the server on port 8888
 
-4. To run the client, run from the root directory:
+4. Install all dependencies for the development server. From the root directory, run:
+```
+npm install --prefix client
+```
+
+5. To run the client, run from the root directory:
 
 ```
 npm run dev --prefix client
 ```
 It will run the server on port 7777
 
-## Jest tests instructions:
+### Jest tests instructions:
 
 - To run tests from the server, run on the root directory:
 ```
@@ -93,19 +98,11 @@ npm run test
 ```
 npm run test --prefix client
 ```
+- There are snapshot tests implemented. In order to update snapshots, run from the root directory:
+```
+npm run test:updateSnapshot
+```
 - Test files are located in both the root (server) and the client directories. Look for __tests__.
-
-## React tests instructions:
-
-- For React (client), Jest was the designated testing tool.
-- Test files for React and configuration files are located in _app/client/src/_
-- Tests for specific components are located in the same component's folder
-
-To execute the tests from React, please run from the **root** directory:
-
-```
-npm test --prefix client
-```
 
 ---
 
