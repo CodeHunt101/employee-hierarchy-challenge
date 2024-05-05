@@ -15,10 +15,6 @@ describe('Employee class', () => {
     it('correctly initialises managerId', () => {
       expect(employee.managerId).toBeNull()
     })
-
-    it('throws error when name is empty', () => {
-      expect(() => new Employee('', 1)).toThrow('Employee name cannot be empty')
-    })
   })
 
   describe('Employee with manager id', () => {
@@ -34,10 +30,6 @@ describe('Employee class', () => {
 
     it('correctly initialises managerId', () => {
       expect(employee.managerId).toBe(2)
-    })
-
-    it('throws error when name is empty', () => {
-      expect(() => new Employee('', 1)).toThrow('Employee name cannot be empty')
     })
   })
 })

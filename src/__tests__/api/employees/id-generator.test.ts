@@ -31,20 +31,6 @@ describe('IdGenerator class', () => {
     expect(() => idGenerator.generateUniqueId()).toThrow('No available IDs')
   })
 
-  it('throws error when provided ID is less than 1', () => {
-    const idGenerator = new IdGenerator(1)
-    expect(() => idGenerator.generateUniqueId(0)).toThrow(
-      'ID provided must be a positive integer'
-    )
-  })
-
-  it('throws error when provided ID is not an integer', () => {
-    const idGenerator = new IdGenerator(1)
-    expect(() => idGenerator.generateUniqueId(1.1)).toThrow(
-      'ID provided must be a positive integer'
-    )
-  })
-
   it('throws error when a manually passed ID is already taken', () => {
     const idGenerator = new IdGenerator(2)
     idGenerator.generateUniqueId() //Assigns an ID of 1

@@ -21,9 +21,7 @@ export class EmployeeHandler {
   }
 
   addEmployee({ name, id, managerId }: EmployeeInput): Employee {
-    if (!name) {
-      throw new Error('Employee name is required.')
-    }
+    this.verifyEmployeeDataFormat(name, id, managerId)
     const idGenerated = this.idGenerator.generateUniqueId(id)
     this.existingIds.add(idGenerated)
     const employee = new Employee(name, idGenerated, managerId)
@@ -31,10 +29,27 @@ export class EmployeeHandler {
     return employee
   }
 
+  private verifyEmployeeDataFormat(
+    name: string,
+    id?: number,
+    managerId?: number
+  ) {
+    if (name === '') {
+      throw Error('Employee name is required.')
+    }
+    if (id) {
+      this.idGenerator.checkIdValidity(id)
+    }
+    if (managerId) {
+      this.idGenerator.checkIdValidity(managerId)
+    }
+  }
+
   private buildEmployeesHierarchy(
     managerId: number | null = null,
     depth = 0
   ): EmployeeHierarchy[] {
+    this.validateManagerIds()
     const employeesHierarchy: EmployeeHierarchy[] = []
 
     // Filter employees based on the provided managerId to get subordinates
@@ -69,6 +84,15 @@ export class EmployeeHandler {
       employeesHierarchy,
       maxDepth: EmployeeHandler.getHierarchyDepth(employeesHierarchy),
     }
+  }
+
+  private validateManagerIds() {
+    const existingIds = this.existingIds
+    this.employees.forEach((emp) => {
+      if (emp.managerId && !existingIds.has(emp.managerId)) {
+        throw new Error('Some employees do not have a valid manager Id')
+      }
+    })
   }
 
   static getHierarchyDepth(employeesHierarchy: EmployeeHierarchy[]) {

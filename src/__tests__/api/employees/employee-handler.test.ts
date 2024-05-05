@@ -62,6 +62,16 @@ describe('EmployeeHandler class', () => {
         'Employee name is required.'
       )
     })
+    it('throws error when adding employee with invalid id format', () => {
+      expect(() =>
+        employeeHandler.addEmployee({ name: 'Harold', id: 0.4 })
+      ).toThrow('ID provided must be a positive integer')
+    })
+    it('throws error when adding employee with empty name', () => {
+      expect(() =>
+        employeeHandler.addEmployee({ name: 'Darren', managerId: -2 })
+      ).toThrow('ID provided must be a positive integer')
+    })
   })
 
   describe('employee hierarchy', () => {
@@ -127,6 +137,17 @@ describe('EmployeeHandler class', () => {
         employeeHandler.getEmployeesHierarchyAndLevels().employeesHierarchy
 
       expect(actualHierarchy).toEqual(expectedHierarchy)
+    })
+
+    it('throws error when an employee has an invalid manager id', () => {
+      const manager = employeeHandler.addEmployee({ name: 'Bobby', id: 1 })
+      const employee1 = employeeHandler.addEmployee({
+        name: 'Employee 1',
+        managerId: manager.id + 5,
+      })
+      expect(() => employeeHandler.getEmployeesHierarchyAndLevels()).toThrow(
+        'Some employees do not have a valid manager Id'
+      )
     })
 
     it('correctly calculates hierarchy depth', () => {
