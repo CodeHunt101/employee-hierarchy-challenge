@@ -27,7 +27,7 @@ const Table = ({ hierarchy }: { hierarchy: EmployeesHierarchyData }) => {
   }
 
   return (
-    <table>
+    <table className='table'>
       <tbody>{tableRows}</tbody>
     </table>
   )

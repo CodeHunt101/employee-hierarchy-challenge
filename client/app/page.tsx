@@ -42,10 +42,12 @@ const OrganisationChart = () => {
   }
 
   return (
-    <>
-      <h2>Organisation hierarchy</h2>
-      <Table hierarchy={hierarchy} />
-    </>
+    <main className="flex justify-center">
+      <div className="prose m-10">
+        <h1>Organisation hierarchy</h1>
+        <Table hierarchy={hierarchy} />
+      </div>
+    </main>
   )
 }
 
