@@ -5,13 +5,29 @@ export class IdGenerator {
     this.availableIds = new Set(Array.from({ length: maxId }, (_, i) => i + 1));
   }
 
-  generateUniqueId(): number {
-    if (this.availableIds.size === 0) {
-      throw Error('No available IDs')
+  generateUniqueId(manualId?: number): number {
+    if (manualId !== undefined) {
+      this.checkIdValidity(manualId)
+      this.availableIds.delete(manualId);
+      return manualId;
+    } else {
+      if (this.availableIds.size === 0) {
+        throw new Error('No available IDs');
+      }
+      const availableIterator = this.availableIds.values();
+      const nextId = availableIterator.next().value;
+      this.availableIds.delete(nextId);
+      return nextId;
     }
-    const availableIterator = this.availableIds.values();
-    const nextId = availableIterator.next().value;
-    this.availableIds.delete(nextId);
-    return nextId;
+  }
+
+  private checkIdValidity(manualId: number) {
+    if (manualId < 1 || !Number.isInteger(manualId)) {
+      throw new Error('ID provided must be a positive integer');
+    }
+
+    if (!this.availableIds.has(manualId)) {
+      throw new Error(`ID ${manualId} is not available`);
+    }
   }
 }

@@ -1,5 +1,6 @@
 import {
   EmployeeHierarchy,
+  EmployeeInput,
   EmployeesHierarchyData,
 } from '../../../types/employee/employee.type'
 import { Employee } from './employee'
@@ -19,46 +20,45 @@ export class EmployeeHandler {
     return this.existingIds
   }
 
-  addEmployee(name: string, managerId: number | null = null): Employee {
+  addEmployee({ name, id, managerId }: EmployeeInput): Employee {
     if (!name) {
       throw new Error('Employee name is required.')
     }
-
-    if (
-      managerId !== null &&
-      !this.employees.some((emp) => emp.id === managerId)
-    ) {
-      throw new Error('Invalid manager ID.')
-    }
-    const id = this.idGenerator.generateUniqueId()
-    this.existingIds.add(id)
-    const employee = new Employee(name, id, managerId)
+    const idGenerated = this.idGenerator.generateUniqueId(id)
+    this.existingIds.add(idGenerated)
+    const employee = new Employee(name, idGenerated, managerId)
     this.employees.push(employee)
     return employee
   }
 
-  // Method to build a flat list but with depth information
   private buildEmployeesHierarchy(
-    managerId: number | null = null
+    managerId: number | null = null,
+    depth = 0
   ): EmployeeHierarchy[] {
     const employeesHierarchy: EmployeeHierarchy[] = []
-    const stack: { employee: Employee; depth: number }[] = []
 
-    // Push the root employees (those with no manager) onto the stack
-    this.employees
-      .filter((e) => e.managerId === managerId)
-      .forEach((e) => stack.push({ employee: e, depth: 0 }))
+    // Filter employees based on the provided managerId to get subordinates
+    const subordinates = this.employees.filter(
+      (employee: Employee) => employee.managerId === managerId
+    )
 
-    // Iterate over the stack until it's empty
-    while (stack.length > 0) {
-      const { employee, depth } = stack.pop()!
-      employeesHierarchy.push({ ...employee, depth })
+    // Iterate through subordinates to build hierarchy recursively
+    subordinates.forEach((subordinate: Employee) => {
+      // Create a hierarchy object for the current subordinate with depth information
+      const subordinateHierarchy: EmployeeHierarchy = { ...subordinate, depth }
 
-      // Push the direct reports of the current employee onto the stack
-      this.employees
-        .filter((e) => e.managerId === employee.id)
-        .forEach((e) => stack.push({ employee: e, depth: depth + 1 }))
-    }
+      // Recursively build hierarchy for subordinates of the current subordinate
+      const subordinatesOfSubordinate = this.buildEmployeesHierarchy(
+        subordinate.id,
+        depth + 1
+      )
+
+      // Add current subordinate and its subordinates to the hierarchy list
+      employeesHierarchy.push(
+        subordinateHierarchy,
+        ...subordinatesOfSubordinate
+      )
+    })
 
     return employeesHierarchy
   }
