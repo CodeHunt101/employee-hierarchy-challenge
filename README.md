@@ -113,6 +113,7 @@ npm run test:updateSnapshot
 - The _Express_ server handles the logic of the app.
 - The _routes_ are stored in `src/api/v1/route.ts`
 - `EmployeeHandler` handles most of the business logic and it transforms the input data into the hierarchical employee information sent to the frontend, it's stored in `src/api/v1/employees/employee-handler.ts`
+- The input file that contains the employee details (not yet hierarchised) is called `employees-data.ts` localted at the root directory.
 
 ### Frontend:
 
