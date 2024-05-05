@@ -9,9 +9,8 @@ import { IdGenerator } from './id-generator'
 export class EmployeeHandler {
   private employees: Employee[]
   private existingIds: Set<number> = new Set()
-  private idGenerator: IdGenerator
 
-  constructor(idGenerator: IdGenerator, employeesData: EmployeeInput[]) {
+  constructor(private idGenerator: IdGenerator, employeesData: EmployeeInput[]) {
     this.employees = []
     this.idGenerator = idGenerator
     this.seedEmployees(employeesData)
