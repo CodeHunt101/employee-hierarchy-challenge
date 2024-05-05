@@ -123,6 +123,8 @@ npm run test:updateSnapshot
 OrganisationChart.tsx
   |
   |-->Table.tsx
+  |     |
+  |     |-->TableRow.tsx
   |
   |-->Spinner.tsx
 ```
