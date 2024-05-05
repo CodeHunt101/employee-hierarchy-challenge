@@ -1,34 +1,30 @@
-import { EmployeesHierarchyData } from '../../../src/types/employee/employee.type'
+import {
+  EmployeesHierarchyData,
+  EmployeeHierarchy,
+} from '../../../src/types/employee/employee.type'
+import TableRow from './table-row'
 
-const Table = ({ hierarchy }: { hierarchy: EmployeesHierarchyData }) => {
-  const { maxDepth, employeesHierarchy } = hierarchy
-  const totalEmployees = employeesHierarchy.length
+type TableProps = {
+  hierarchy: EmployeesHierarchyData
+}
 
-  // Generate table rows
-  const tableRows = []
-  for (let rowIndex = 0; rowIndex < totalEmployees; rowIndex++) {
-    const { name, depth } = employeesHierarchy[rowIndex]
-    const rowData = []
-
-    // Add empty cells for hierarchy levels above
-    for (let cellIndex = 0; cellIndex < depth; cellIndex++) {
-      rowData.push(<td key={cellIndex}></td>)
-    }
-
-    // Add employee name
-    rowData.push(<td key={depth}><b>{name}</b></td>)
-
-    // Add empty cells for hierarchy levels below
-    for (let cellIndex = depth + 1; cellIndex <= maxDepth; cellIndex++) {
-      rowData.push(<td key={cellIndex}></td>)
-    }
-
-    tableRows.push(<tr key={rowIndex}>{rowData}</tr>)
-  }
+const Table = ({ hierarchy }: TableProps) => {
+  const { employeesHierarchy, maxDepth } = hierarchy
 
   return (
-    <table className='table'>
-      <tbody>{tableRows}</tbody>
+    <table className="table">
+      <tbody>
+        {employeesHierarchy.map(
+          (employee: EmployeeHierarchy, index: number) => (
+            <TableRow
+              key={index}
+              name={employee.name}
+              employeeDepth={employee.depth}
+              maxDepth={maxDepth}
+            />
+          )
+        )}
+      </tbody>
     </table>
   )
 }
