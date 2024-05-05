@@ -1,0 +1,36 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders organisation chart unchanged 1`] = `
+<div>
+  <h1>
+    Failed to load data
+  </h1>
+</div>
+`;
+
+exports[`renders table unchanged 1`] = `
+<div>
+  <table
+    class="table"
+  >
+    <tbody>
+      <tr>
+        <td>
+          <b>
+            Darren
+          </b>
+        </td>
+        <td />
+      </tr>
+      <tr>
+        <td />
+        <td>
+          <b>
+            Bobby
+          </b>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
