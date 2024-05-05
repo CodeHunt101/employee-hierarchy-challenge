@@ -11,16 +11,27 @@ export class EmployeeHandler {
   private existingIds: Set<number> = new Set()
   private idGenerator: IdGenerator
 
-  constructor(idGenerator: IdGenerator) {
+  constructor(idGenerator: IdGenerator, employeesData: EmployeeInput[]) {
     this.employees = []
     this.idGenerator = idGenerator
+    this.seedEmployees(employeesData)
   }
 
   getExistingEmployeeIds() {
     return this.existingIds
   }
 
-  addEmployee({ name, id, managerId }: EmployeeInput): Employee {
+  getExistingEmployees() {
+    return this.employees
+  }
+
+  private seedEmployees(employeesData: EmployeeInput[]) {
+    employeesData.forEach(({ name, id, managerId }) => {
+      this.addEmployee({ name, id, managerId })
+    })
+  }
+
+  private addEmployee({ name, id, managerId }: EmployeeInput): Employee {
     this.verifyEmployeeDataFormat(name, id, managerId)
     const idGenerated = this.idGenerator.generateUniqueId(id)
     this.existingIds.add(idGenerated)
@@ -41,7 +52,7 @@ export class EmployeeHandler {
       this.idGenerator.checkIdValidity(id)
     }
     if (managerId) {
-      this.idGenerator.checkIdValidity(managerId)
+      this.idGenerator.checkIdValidity(managerId, true)
     }
   }
 

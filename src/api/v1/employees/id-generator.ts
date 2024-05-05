@@ -7,6 +7,7 @@ export class IdGenerator {
 
   generateUniqueId(manualId?: number): number {
     if (manualId !== undefined) {
+      this.checkIdValidity(manualId)
       this.checkIdAvailability(manualId)
       this.availableIds.delete(manualId)
       return manualId
@@ -21,9 +22,13 @@ export class IdGenerator {
     }
   }
 
-  checkIdValidity(manualId: number) {
+  checkIdValidity(manualId: number, isManagerId?: boolean) {
     if (manualId < 1 || !Number.isInteger(manualId)) {
-      throw new Error('ID provided must be a positive integer')
+      throw new Error(
+        `${
+          isManagerId ? 'Manager ID' : 'ID'
+        } provided: ${manualId}, must be a positive integer`
+      )
     }
   }
 

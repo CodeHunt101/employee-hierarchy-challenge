@@ -1,6 +1,11 @@
 import express from 'express'
 import cors from 'cors'
-import { employeeHandler } from './seed'
+import { IdGenerator } from './id-generator'
+import { EmployeeHandler } from './employee-handler'
+import { employeesData } from '../../../../employees-data'
+
+const idGenerator = new IdGenerator(500)
+export const employeeHandler = new EmployeeHandler(idGenerator, employeesData)
 
 export const app = express()
 app.use(cors())

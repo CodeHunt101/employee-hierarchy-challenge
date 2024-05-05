@@ -3,14 +3,14 @@ import { app } from '../../../api/v1/employees/route'
 
 const request = supertest(app)
 
-jest.mock('../../../api/v1/employees/seed', () => ({
-  employeeHandler: {
-    getEmployeesHierarchyAndLevels: jest.fn(),
-  },
-}))
-
-import { employeeHandler } from '../../../api/v1/employees/seed'
-
+jest.mock('../../../api/v1/employees/employee-handler', () => {
+  return {
+    EmployeeHandler: jest.fn().mockImplementation(() => ({
+      getEmployeesHierarchyAndLevels: jest.fn(),
+    })),
+  }
+})
+import { employeeHandler } from '../../../api/v1/employees/route'
 describe('GET /hierarchy/', () => {
   afterEach(() => {
     jest.clearAllMocks()

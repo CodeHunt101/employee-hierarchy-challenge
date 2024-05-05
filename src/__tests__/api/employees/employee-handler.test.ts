@@ -1,135 +1,157 @@
 import { EmployeeHandler } from '../../../api/v1/employees/employee-handler'
 import { IdGenerator } from '../../../api/v1/employees/id-generator'
-import { EmployeeHierarchy } from '../../../types/employee/employee.type'
+import {
+  EmployeeHierarchy,
+  EmployeeInput,
+} from '../../../types/employee/employee.type'
 
 describe('EmployeeHandler class', () => {
-  let employeeHandler: EmployeeHandler
-
   describe('existing employees', () => {
-    beforeEach(() => {
-      const idGenerator = new IdGenerator(10)
-      employeeHandler = new EmployeeHandler(idGenerator)
-    })
+    const employeesDataMock: EmployeeInput[] = [
+      {
+        name: 'Bobby',
+      },
+      {
+        name: 'Darren',
+      },
+    ]
+    const idGenerator = new IdGenerator(10)
+    const employeeHandler = new EmployeeHandler(idGenerator, employeesDataMock)
+    const existingIds = employeeHandler.getExistingEmployeeIds()
+
     it('returns correct existing employee IDs', () => {
-      employeeHandler.addEmployee({ name: 'Bobby' })
-      employeeHandler.addEmployee({ name: 'Darren' })
-      const existingIds = employeeHandler.getExistingEmployeeIds()
       expect(existingIds.size).toBe(2)
     })
 
     it('returns existing employee IDs including added IDs', () => {
-      employeeHandler.addEmployee({ name: 'Bobby' })
-      employeeHandler.addEmployee({ name: 'Darren' })
-      const existingIds = employeeHandler.getExistingEmployeeIds()
       expect(Array.from(existingIds)).toEqual(expect.arrayContaining([1, 2]))
     })
   })
 
   describe('adding employees', () => {
-    beforeEach(() => {
-      const idGenerator = new IdGenerator(10)
-      employeeHandler = new EmployeeHandler(idGenerator)
-    })
+    const employeesDataMock: EmployeeInput[] = [
+      {
+        name: 'Bobby',
+        managerId: 1,
+        id: 1,
+      },
+      {
+        name: 'Darren',
+        id: 2,
+      },
+    ]
+    const idGenerator = new IdGenerator(10)
+    const employeeHandler = new EmployeeHandler(idGenerator, employeesDataMock)
+    const employees = employeeHandler.getExistingEmployees()
     it('adds new employee CEO correctly', () => {
-      const employee = employeeHandler.addEmployee({ name: 'Darren' })
-      expect(employee.name).toBe('Darren')
+      const CEO = employeesDataMock[1]
+      expect(employees.find((e) => e.id === CEO.id)).toBeTruthy()
     })
     it('returns null for managerId if employee is CEO', () => {
-      const employee = employeeHandler.addEmployee({ name: 'Darren' })
-      expect(employee.managerId).toBeNull()
+      const CEO = employeesDataMock[1]
+      expect(employees.find((e) => e.id === CEO.id)?.managerId).toBeNull()
     })
 
     it('adds employee with manager correctly', () => {
-      const manager = employeeHandler.addEmployee({ name: 'Bobby' })
-      const employee = employeeHandler.addEmployee({
-        name: 'Darren',
-        managerId: manager.id,
-      })
-      expect(employee.name).toBe('Darren')
-    })
-
-    it('returns manager id when it adds employee with manager', () => {
-      const manager = employeeHandler.addEmployee({ name: 'Bobby' })
-      const employee = employeeHandler.addEmployee({
-        name: 'Darren',
-        managerId: manager.id,
-      })
-      expect(employee.managerId).toBe(manager.id)
+      const employeeWithManagerId = employeesDataMock[1]
+      expect(
+        employees.find((e) => e.id === employeeWithManagerId.id)
+      ).toBeTruthy()
     })
 
     it('throws error when adding employee with empty name', () => {
-      expect(() => employeeHandler.addEmployee({ name: '' })).toThrow(
-        'Employee name is required.'
-      )
+      const employeesIncorrectDataMock: EmployeeInput[] = [
+        {
+          name: '',
+        },
+      ]
+      const idGenerator = new IdGenerator(10)
+      expect(
+        () => new EmployeeHandler(idGenerator, employeesIncorrectDataMock)
+      ).toThrow(`Employee name is required.`)
     })
     it('throws error when adding employee with invalid id format', () => {
-      expect(() =>
-        employeeHandler.addEmployee({ name: 'Harold', id: 0.4 })
-      ).toThrow('ID provided must be a positive integer')
+      const employeesIncorrectDataMock: EmployeeInput[] = [
+        {
+          name: 'Darren',
+          id: 0.5,
+        },
+      ]
+      const idGenerator = new IdGenerator(10)
+      expect(
+        () => new EmployeeHandler(idGenerator, employeesIncorrectDataMock)
+      ).toThrow('ID provided: 0.5, must be a positive integer')
     })
-    it('throws error when adding employee with empty name', () => {
-      expect(() =>
-        employeeHandler.addEmployee({ name: 'Darren', managerId: -2 })
-      ).toThrow('ID provided must be a positive integer')
+
+    it('throws error when adding employee with invalid managerId format', () => {
+      const employeesIncorrectDataMock: EmployeeInput[] = [
+        {
+          name: 'Bobby',
+          id: 1,
+          managerId: 1,
+        },
+        {
+          name: 'Darren',
+          id: 2,
+          managerId: -1,
+        },
+      ]
+      const idGenerator = new IdGenerator(10)
+      expect(
+        () => new EmployeeHandler(idGenerator, employeesIncorrectDataMock)
+      ).toThrow('Manager ID provided: -1, must be a positive integer')
     })
   })
 
   describe('employee hierarchy', () => {
-    beforeEach(() => {
-      const idGenerator = new IdGenerator(10)
-      employeeHandler = new EmployeeHandler(idGenerator)
-    })
-
+    const employeesDataMock: EmployeeInput[] = [
+      {
+        name: 'Bobby',
+        managerId: 2,
+        id: 1,
+      },
+      {
+        name: 'Darren',
+        id: 2,
+      },
+      {
+        name: 'Ella',
+        managerId: 2,
+      },
+      {
+        name: 'Harold',
+        id: 4,
+        managerId: 3,
+      },
+    ]
+    const idGenerator = new IdGenerator(10)
+    const employeeHandler = new EmployeeHandler(idGenerator, employeesDataMock)
     it('correctly returns the length of the hierarchy data', () => {
-      const manager = employeeHandler.addEmployee({ name: 'CEO' })
-      const employee1 = employeeHandler.addEmployee({
-        name: 'Employee 1',
-        managerId: manager.id,
-      })
-      employeeHandler.addEmployee({ name: 'Employee 2', managerId: manager.id })
-      employeeHandler.addEmployee({
-        name: 'Employee 3',
-        managerId: employee1.id,
-      })
       const hierarchy =
         employeeHandler.getEmployeesHierarchyAndLevels().employeesHierarchy
       expect(hierarchy.length).toBe(4)
     })
 
     it('correctly builds employee hierarchy', () => {
-      const manager = employeeHandler.addEmployee({ name: 'Bobby' })
-      const employee1 = employeeHandler.addEmployee({
-        name: 'Employee 1',
-        managerId: manager.id,
-      })
-      const employee2 = employeeHandler.addEmployee({
-        name: 'Employee 2',
-        managerId: manager.id,
-      })
-      const employee3 = employeeHandler.addEmployee({
-        name: 'Employee 3',
-        managerId: employee1.id,
-      })
-
       const expectedHierarchy: EmployeeHierarchy[] = [
-        { id: manager.id, name: 'Bobby', managerId: null, depth: 0 },
+        { id: 2, name: 'Darren', managerId: null, depth: 0 },
         {
-          id: employee1.id,
-          name: 'Employee 1',
-          managerId: manager.id,
+          id: 1,
+          name: 'Bobby',
+          managerId: 2,
           depth: 1,
         },
         {
-          id: employee3.id,
-          name: 'Employee 3',
-          managerId: employee1.id,
+          id: 3,
+          name: 'Ella',
+          managerId: 2,
+          depth: 1,
+        },
+        {
+          id: 4,
+          name: 'Harold',
+          managerId: 3,
           depth: 2,
-        },
-        {
-          id: employee2.id,
-          name: 'Employee 2',
-          managerId: manager.id,
-          depth: 1,
         },
       ]
 
@@ -140,11 +162,23 @@ describe('EmployeeHandler class', () => {
     })
 
     it('throws error when an employee has an invalid manager id', () => {
-      const manager = employeeHandler.addEmployee({ name: 'Bobby', id: 1 })
-      const employee1 = employeeHandler.addEmployee({
-        name: 'Employee 1',
-        managerId: manager.id + 5,
-      })
+      const employeesDataMock: EmployeeInput[] = [
+        {
+          name: 'Bobby',
+          managerId: 50,
+          id: 1,
+        },
+        {
+          name: 'Darren',
+          id: 2,
+        },
+      ]
+      const idGenerator = new IdGenerator(10)
+      const employeeHandler = new EmployeeHandler(
+        idGenerator,
+        employeesDataMock
+      )
+
       expect(() => employeeHandler.getEmployeesHierarchyAndLevels()).toThrow(
         'Some employees do not have a valid manager Id'
       )
