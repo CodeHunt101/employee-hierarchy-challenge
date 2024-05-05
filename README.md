@@ -51,7 +51,7 @@ Although this application only renders a table in the client, It is fully respon
 
 - _Express_ was the chosen _Node.js_ framework for the Back-End as it quickly allows to build a TypeScript backend structure.
 
-- The Back-End takes care of most of the logic, including the development of the data structure that contains the employees with hiearchical information. The fron-end uses this data to render the informat as per the requirements.
+- The Back-End takes care of most of the logic, including the development of the data structure that contains the employees with hiearchical information. The front-end uses this data to render the informat as per the requirements.
 
 - _TailwindCSS_ (powered by _DaisyUI_), is the CSS framework layout and stylings.
 
@@ -86,7 +86,7 @@ npm install --prefix client
 ```
 npm run dev --prefix client
 ```
-It will run the server on port 7777
+It will run the client on port 7777
 
 ### Jest tests instructions:
 
@@ -102,7 +102,7 @@ npm run test --prefix client
 ```
 npm run test:updateSnapshot
 ```
-- Test files are located in both the root (server) and the client directories. Look for __tests__.
+- Test files are located in both the root (server) and the client directories. Look for `__tests__`.
 
 ---
 
